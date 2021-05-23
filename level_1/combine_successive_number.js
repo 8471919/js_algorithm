@@ -11,23 +11,31 @@ arr = [4, 4, 4, 3, 3] 이면 [4, 3] 을 return 합니다.
 배열 arr의 원소의 크기 : 0보다 크거나 같고 9보다 작거나 같은 정수 
 */
 
-const solution = (arr) => {
-    let answer = [];
-    let state = 0;
+//First answer
+// const solution = (arr) => {
+//     let answer = [];
+//     let state = 0;
 
-    for(let i = 1; i < arr.length; i++) {
-        if(arr[i] === arr[i-1]) {
-            state = 1;
-            if(arr.length-1 === i) answer.push(arr[i-1]);
-        } else {
-            answer.push(arr[i-1]);
-            state = 0;
-            if(arr.length-1 === i) answer.push(arr[i]);
-        }
-    }
+//     for(let i = 1; i < arr.length; i++) {
+//         if(arr[i] === arr[i-1]) {
+//             state = 1;
+//             if(arr.length-1 === i) answer.push(arr[i-1]);
+//         } else {
+//             answer.push(arr[i-1]);
+//             state = 0;
+//             if(arr.length-1 === i) answer.push(arr[i]);
+//         }
+//     }
 
+//     return answer;
+// }
 
-    return answer;
-}
+//Second answer
+const solution = (arr) => arr.filter((el, index, arr) => el !== arr[index - 1]);
 
-console.log(solution([1,1,3,3,0,1,1,9,9,9,9,9,9,1,1,1,1,1,1,0,0,0,0,0,3,2]));
+console.log(
+    solution([
+        1, 1, 3, 3, 0, 1, 1, 9, 9, 9, 9, 9, 9, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
+        3, 2,
+    ])
+);
