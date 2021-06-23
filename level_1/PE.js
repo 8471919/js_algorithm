@@ -14,8 +14,85 @@ n	lost	reserve	return
 5	[2, 4]	[3]	4
 3	[3]	[1]	2 */
 
-const solution = (n, lost, reserve) => {};
+//실패
+// const solution = (n, lost, reserve) => {
+//     for (let i = 0; i < lost.length; i++) {
+//         if (reserve.includes(lost[i])) {
+//             reserve.splice(reserve.indexOf(lost[i]), 1);
+//             lost.splice(lost.indexOf(lost[i]), 1);
+//         }
+//     }
+//     let answer = n - lost.length;
+
+//     for (let i = 0; i < reserve.length; i++) {
+//         if (lost.includes(reserve[i] - 1)) {
+//             lost.splice(lost.indexOf(reserve[i] - 1), 1);
+//             answer++;
+//         } else if (lost.includes(reserve[i] + 1)) {
+//             lost.splice(lost.indexOf(reserve[i] + 1), 1);
+//             answer++;
+//         }
+//     }
+
+//     return answer;
+// };
 
 console.log(solution(5, [2, 4], [1, 3, 5]));
 console.log(solution(5, [2, 4], [3]));
 console.log(solution(3, [3], [1]));
+console.log(solution(5, [2, 3, 4], [3, 4, 5]));
+
+function solution(n, lost, reserve) {
+    const arr = new Array(n + 1).fill(1);
+    arr[0] = null;
+    let answer = 0;
+
+    lost.forEach((el) => arr[el]--);
+    reserve.forEach((el) => arr[el]++);
+
+    console.log(arr);
+
+    arr.forEach((el, idx) => {
+        if (el === 0) {
+            if (arr[idx - 1] > 1) {
+                arr[idx]++;
+                arr[idx - 1]--;
+            } else if (arr[idx + 1] > 1) {
+                arr[idx]++;
+                arr[idx + 1]--;
+            }
+        }
+    });
+
+    console.log(arr);
+
+    arr.forEach((el) => {
+        if (el > 0) answer++;
+    });
+
+    return answer;
+}
+
+//다른풀이(초반에 하려다가 실패함)
+// const solution = (n, lost, reserve) => {
+//     for (let i = 0; i < lost.length; i++) {
+//         if (reserve.includes(lost[i])) {
+//             reserve.splice(reserve.indexOf(lost[i]), 1);
+//             lost.splice(lost.indexOf(lost[i]), 1);
+//             i--;
+//         }
+//     }
+//     let answer = n - lost.length;
+
+//     for (let i = 0; i < reserve.length; i++) {
+//         if (lost.includes(reserve[i] - 1)) {
+//             lost.splice(lost.indexOf(reserve[i] - 1), 1);
+//             answer++;
+//         } else if (lost.includes(reserve[i] + 1)) {
+//             lost.splice(lost.indexOf(reserve[i] + 1), 1);
+//             answer++;
+//         }
+//     }
+
+//     return answer;
+// };
