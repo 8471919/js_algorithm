@@ -155,10 +155,7 @@ class Pointer {
         this.curFolder.new(name, text);
     }
     cls() {
-        for (let i = 0; i < 30; i++) {
-            console.log();
-        }
-        this.curFolder.curLocation();
+        console.clear();
     }
     curLocation() {
         this.curFolder.curLocation();
