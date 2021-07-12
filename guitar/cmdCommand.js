@@ -49,6 +49,9 @@ class File {
     getText() {
         return this.text;
     }
+    setText(text) {
+        this.text = text;
+    }
 }
 
 class Folder extends File {
@@ -155,11 +158,16 @@ class Folder extends File {
             return false;
         }
         const fileIndex = this.search(name, this.fileList);
-        console.log(fileIndex);
         const file = this.fileList[fileIndex];
         const text = file.getText();
         console.log(text);
         return file;
+    }
+    //write명령 - 현재 파일 내용을 출력하고, 수정할 내용을 입력받는다.
+    write(name, text) {
+        console.log("수정 전");
+        const file = this.read(name);
+        file.setText(text);
     }
 }
 
@@ -191,11 +199,10 @@ class Pointer {
     read(name) {
         this.curFolder.read(name);
     }
-    write(name) {
-        this.curFolder.write(name);
+    write(name, text) {
+        this.curFolder.write(name, text);
     }
 }
-
 rl.on("line", (line) => {
     main(line);
 });
