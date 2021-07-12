@@ -46,6 +46,9 @@ class File {
         const file = new File(name, text);
         return file;
     }
+    getText() {
+        return this.text;
+    }
 }
 
 class Folder extends File {
@@ -54,6 +57,16 @@ class Folder extends File {
         this.prev = null; //여기에 prev를 만든이유. cmd창에서 dir을 치면 이전폴더가 폴더 내부에 있기 때문.
         this.folderList = [];
         this.fileList = [];
+    }
+    //파일, 폴더명으로 인덱스를 찾는다.
+    search(name, list) {
+        let fileOrFolder;
+        for (fileOrFolder of list) {
+            if (fileOrFolder.name === name) {
+                break;
+            }
+        }
+        return list.indexOf(fileOrFolder);
     }
     //폴더명으로 인덱스를 찾는다.
     searchFolder(name) {
@@ -128,10 +141,25 @@ class Folder extends File {
         // this.curLocation();
         return this.folderList[next];
     }
+    //new명령 - 파일을 생성한다.
     new(name, text) {
         const file = this.mkfile(name, text);
         this.fileList.push(file);
         // this.curLocation();
+    }
+    //read명령 - 현재 파일 내용을 출력한다.
+    read(name) {
+        //파일명을 입력하지 않았을 경우.
+        if (name === undefined) {
+            console.log("파일명을 입력해주세요.");
+            return false;
+        }
+        const fileIndex = this.search(name, this.fileList);
+        console.log(fileIndex);
+        const file = this.fileList[fileIndex];
+        const text = file.getText();
+        console.log(text);
+        return file;
     }
 }
 
@@ -160,6 +188,12 @@ class Pointer {
     curLocation() {
         this.curFolder.curLocation();
     }
+    read(name) {
+        this.curFolder.read(name);
+    }
+    write(name) {
+        this.curFolder.write(name);
+    }
 }
 
 rl.on("line", (line) => {
@@ -182,7 +216,9 @@ const main = (line) => {
     // pointer.cls();
     const [command, condition1, ...condition2] = line.split(" ");
     if (pointer[command]) {
-        pointer[command](condition1, condition2);
+        pointer[command](condition1, condition2.toString());
+    } else {
+        console.log("명령어가 잘못 되었습니다.");
     }
     pointer.curLocation();
 };
