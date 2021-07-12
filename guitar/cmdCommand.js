@@ -83,7 +83,7 @@ class Folder extends File {
             locationStack.unshift(toRoot.name);
             toRoot = toRoot.prev;
         }
-        process.stdout.write(locationStack.join("/") + "/");
+        process.stdout.write(locationStack.join("/") + ">");
     }
     //dir명령 - 현재 폴더의 폴더와 파일들을 보여준다.
     dir() {
