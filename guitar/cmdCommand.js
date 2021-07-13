@@ -71,26 +71,6 @@ class Folder extends File {
         }
         return list.indexOf(fileOrFolder);
     }
-    //폴더명으로 인덱스를 찾는다.
-    searchFolder(name) {
-        let folder;
-        for (folder of this.folderList) {
-            if (folder.name === name) {
-                break;
-            }
-        }
-        return this.folderList.indexOf(folder);
-    }
-    //파일명으로 인덱스를 찾는다.
-    searchFile(name) {
-        let file;
-        for (file of this.fileList) {
-            if (file.name === name) {
-                break;
-            }
-        }
-        return this.fileList.indexOf(file);
-    }
     //현재 경로를 나타낸다.
     curLocation() {
         const locationStack = [];
@@ -133,7 +113,12 @@ class Folder extends File {
     }
     // cd명령 - 현재 폴더에서 다른 폴더로 이동한다.
     cd(name) {
-        const next = this.searchFolder(name);
+        if (name === undefined) {
+            this.curLocation();
+            console.log();
+            return this;
+        }
+        const next = this.search(name, this.folderList);
         if (next === undefined) {
             console.log("해당 폴더가 없습니다.");
             return false;
@@ -175,6 +160,8 @@ class Pointer {
     constructor(root) {
         this.root = root;
         this.curFolder = this.root;
+        //프로그램 실행 되자마자 경로가 뜰 수 있도록 생성자에 넣어주었다.
+        this.curFolder.curLocation();
         //Folder클래스 말고, 여기에 prev를 만들어도 좋았을 것 같다.
     }
     //화살표함수는 클래스 내에서 가급적 쓰지말자.
@@ -223,9 +210,11 @@ const main = (line) => {
     // pointer.cls();
     const [command, condition1, ...condition2] = line.split(" ");
     if (pointer[command]) {
-        pointer[command](condition1, condition2.toString());
+        let con2 = condition2.join(" ");
+        pointer[command](condition1, con2);
     } else {
         console.log("명령어가 잘못 되었습니다.");
     }
+    // pointer.cd();
     pointer.curLocation();
 };
