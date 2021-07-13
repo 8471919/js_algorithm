@@ -42,10 +42,6 @@ class File {
         this.name = name;
         this.text = text;
     }
-    mkfile(name, text = null) {
-        const file = new File(name, text);
-        return file;
-    }
     getText() {
         return this.text;
     }
@@ -60,6 +56,11 @@ class Folder extends File {
         this.prev = null; //여기에 prev를 만든이유. cmd창에서 dir을 치면 이전폴더가 폴더 내부에 있기 때문.
         this.folderList = [];
         this.fileList = [];
+    }
+    //파일을 생성한다.
+    mkfile(name, text = null) {
+        const file = new File(name, text);
+        return file;
     }
     //파일, 폴더명으로 인덱스를 찾는다.
     search(name, list) {
@@ -97,7 +98,6 @@ class Folder extends File {
         print(this.folderList);
         console.log("파일 : ");
         print(this.fileList);
-        // this.curLocation();
     }
     //mkdir명령 - 현재 폴더에서 하위폴더를 만든다.
     mkdir(name) {
@@ -109,31 +109,37 @@ class Folder extends File {
         const folder = new Folder(name);
         folder.prev = this;
         this.folderList.push(folder);
-        // this.curLocation();
     }
     // cd명령 - 현재 폴더에서 다른 폴더로 이동한다.
     cd(name) {
+        //현재 경로 출력
         if (name === undefined) {
             this.curLocation();
             console.log();
             return this;
         }
         const next = this.search(name, this.folderList);
+        //해당 폴더가 존재하지 않을 경우
         if (next === undefined) {
             console.log("해당 폴더가 없습니다.");
             return false;
         }
+        //아래의 if문들을 없앨 수는 없을까?
+        // ->cd class를 따로 만들어서 객체로 만든다??
+        // ->명령어 하나를 위해 클래스를 만드는건 아닌 듯하다.
+        // ->애당초 명령어마다 클래스를 만들던가 했어야 했다.
+        // ->문제: ..과같은 명령은 함수명으로 사용할 수 없다.
+        // 그렇다면 어떻게 해야하지? 잘 모르겠다.
+        //cd .. - 상위 폴더로 이동
         if (name === "..") {
             return this.prev;
         }
-        // this.curLocation();
         return this.folderList[next];
     }
     //new명령 - 파일을 생성한다.
     new(name, text) {
         const file = this.mkfile(name, text);
         this.fileList.push(file);
-        // this.curLocation();
     }
     //read명령 - 현재 파일 내용을 출력한다.
     read(name) {
@@ -172,6 +178,10 @@ class Pointer {
         this.curFolder.mkdir(name);
     }
     cd(name) {
+        if (name === "/") {
+            this.curFolder = this.root;
+            return false;
+        }
         this.curFolder = this.curFolder.cd(name);
     }
     new(name, text = null) {
@@ -215,6 +225,5 @@ const main = (line) => {
     } else {
         console.log("명령어가 잘못 되었습니다.");
     }
-    // pointer.cd();
     pointer.curLocation();
 };
