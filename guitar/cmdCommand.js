@@ -57,6 +57,12 @@ class Folder extends File {
         this.folderList = [];
         this.fileList = [];
     }
+    getPrev() {
+        return this.prev;
+    }
+    getFolderList() {
+        return this.folderList;
+    }
     //파일을 생성한다.
     mkfile(name, text = null) {
         const file = new File(name, text);
@@ -65,10 +71,16 @@ class Folder extends File {
     //파일, 폴더명으로 인덱스를 찾는다.
     search(name, list) {
         let fileOrFolder;
+        let i = 0; //list의 length가 1일때, 첫번째 element만 뽑고 break문 없이 바로 return하는 것을 방지하기 위해.
         for (fileOrFolder of list) {
             if (fileOrFolder.name === name) {
+                i++;
                 break;
             }
+        }
+        //i가 0 이라는 것은 name이 맞는 file이나 folder가 없다는 뜻.
+        if (i === 0) {
+            return -1;
         }
         return list.indexOf(fileOrFolder);
     }
@@ -178,9 +190,28 @@ class Pointer {
         this.curFolder.mkdir(name);
     }
     cd(name) {
+        //Folder클래스의 cd ..명령을 여기로 옮기는 방법이 없을까?
+        //Folder클래스의 prev를 리턴하는 메서드가 있으면 가능할 듯.
+        //하지만 이거 하나를 위해서 그러한 메서드를 만드는 것이 맞는가?
+        //cd / - root로 이동.
         if (name === "/") {
             this.curFolder = this.root;
             return false;
+        }
+        //cd /filename/filename2... - 절대경로 이동
+        if (name[0] === "/" && name.length > 1) {
+            const files = name.split("/"); //files[0]값은 공백이다.
+            let cur = root;
+            for (let idx = 1; idx < files.length; idx++) {
+                const folderList = cur.getFolderList();
+                const next = cur.search(files[idx], folderList);
+                if (next === -1) {
+                    console.log("잘못된 폴더명입니다.");
+                    return false;
+                }
+                cur = folderList[next];
+            }
+            return (this.curFolder = cur);
         }
         this.curFolder = this.curFolder.cd(name);
     }
