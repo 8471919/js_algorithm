@@ -143,9 +143,9 @@ class Folder extends File {
         // ->문제: ..과같은 명령은 함수명으로 사용할 수 없다.
         // 그렇다면 어떻게 해야하지? 잘 모르겠다.
         //cd .. - 상위 폴더로 이동
-        if (name === "..") {
-            return this.prev;
-        }
+        // if (name === "..") {
+        //     return this.prev;
+        // }
         return this.folderList[next];
     }
     //new명령 - 파일을 생성한다.
@@ -193,6 +193,12 @@ class Pointer {
         //Folder클래스의 cd ..명령을 여기로 옮기는 방법이 없을까?
         //Folder클래스의 prev를 리턴하는 메서드가 있으면 가능할 듯.
         //하지만 이거 하나를 위해서 그러한 메서드를 만드는 것이 맞는가?
+        //일단 옮겨보자.
+        //cd .. - 상위폴더로 이동
+        if (name === "..") {
+            this.curFolder = this.curFolder.getPrev();
+            return false;
+        }
         //cd / - root로 이동.
         if (name === "/") {
             this.curFolder = this.root;
