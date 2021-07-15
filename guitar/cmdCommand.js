@@ -83,6 +83,13 @@ class Folder extends File {
             return -1;
         }
         return list.indexOf(fileOrFolder);
+
+        // for (let i = 0; i < list.length; i++) {
+        //     if (list[i].name === name) {
+        //         return i;
+        //     }
+        // }
+        // return -1;
     }
     //현재 경로를 나타낸다.
     curLocation() {
@@ -94,6 +101,7 @@ class Folder extends File {
         }
         process.stdout.write(locationStack.join("/") + ">");
     }
+
     //dir명령 - 현재 폴더의 폴더와 파일들을 보여준다.
     dir() {
         const print = (list) => {
@@ -105,6 +113,13 @@ class Folder extends File {
             });
             console.log();
         };
+
+        // const print2 = (list) => {
+        //     while(list.length) {
+        //         const curFiles = list.splice(0, 5);
+        //         console.log(curFiles.join('\t'));
+        //     }
+        // }
         // Array.prototype.print = funtion()
         console.log("폴더 : ");
         print(this.folderList);
